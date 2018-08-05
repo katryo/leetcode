@@ -1,5 +1,5 @@
-# from copy import deepcopy
-from collections import defaultdict
+from copy import deepcopy
+
 
 class Solution(object):
     maxcount_set = (0, set())
@@ -13,18 +13,28 @@ class Solution(object):
             return []
 
         nums.sort()
-        dp = [0] * len(nums)
-        dp[0] = 1
-        for i in range(len(nums)):
-            for j in range(i-1, -1, -1):
+
+        greatest_set_ends_at = [set()] * len(nums)
+        greatest_set_ends_at[0].add(nums[0])
+
+        ans = [nums[0]]
+        for i in range(1, len(nums)):
+            for j in range(i):
                 if nums[i] % nums[j] == 0:
-                    dp[i] = max(dp[i], dp[j]+1)
+                    if len(greatest_set_ends_at[j])+1 > len(greatest_set_ends_at[i]):
+                        copied_set = deepcopy(greatest_set_ends_at[j])
+                        copied_set.add(nums[i])
+                        greatest_set_ends_at[i] = copied_set
 
-        print(dp)
-        return []
+                        if len(copied_set) > len(ans):
+                            ans = list(copied_set)
+
+        return ans
 
 
-s = Solution()
-print(s.largestDivisibleSubset([1, 2, 3]))
-print(s.largestDivisibleSubset([1, 2, 4, 8]))
-print(s.largestDivisibleSubset([1, 2, 4, 8, 9, 72]))
+# s = Solution()
+# print(s.largestDivisibleSubset([1, 2, 3]))
+# print(s.largestDivisibleSubset([1, 2, 4, 8]))
+# print(s.largestDivisibleSubset([1, 2, 4, 8, 9, 72]))
+# print(s.largestDivisibleSubset([3, 9, 2]))
+# print(s.largestDivisibleSubset([3, 9, 18, 200]))
