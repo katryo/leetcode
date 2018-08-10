@@ -34,6 +34,7 @@
 # The next byte is a continuation byte which starts with 10 and that's correct.
 # But the second continuation byte does not start with 10, so it is invalid.
 
+
 class Solution(object):
     def validUtf8(self, data):
         """
@@ -46,24 +47,52 @@ class Solution(object):
 
         bin_data = [''] * len(data)
         for i in range(len(data)):
-            bin_data[i] = bin(data)[2:]
+            bin_data[i] = bin(data[i])[2:]
+            while len(bin_data[i]) < 8:
+                bin_data[i] = '0' + bin_data[i]
 
+        def what_byte_char(binary):
+            if binary[0] == '0':
+                return 1
+            cur = 0
+            while cur < len(binary) and binary[cur] == '1':
+                cur += 1
+            if cur < 2:
+                return -1
+            return cur
 
-        def what_byte_char(num)
-            return -1
+        def begins_with_10(binary):
+            return binary[0] == '1' and binary[1] == '0'
 
-        def begins_with_10(num):
-            return False
-
-        n = what_byte_char(data[0])
-        if n != len(data):
-            return False
-
-        for i in range(n):
-            if not begins_with_10(data[i+1]):
+        # print(bin_data)
+        current = 0
+        while current < len(bin_data):
+            n = what_byte_char(bin_data[current])
+            if n == -1:
                 return False
+
+            if n == 1:
+                current += 1
+                continue
+
+            if n > 4:
+                return False
+
+            if n > len(bin_data) - current:
+                return False
+
+            for i in range(current+1, current+n):
+                if not begins_with_10(bin_data[i]):
+                    return False
+            current += n
         return True
 
-s = Solution()
-print(s.validUtf8([197, 130, 1]))
-print(s.validUtf8([235, 140, 4]))
+
+# s = Solution()
+# print(s.validUtf8([145]))
+# print(s.validUtf8([255]))
+# print(s.validUtf8([197, 130, 1]))
+# print(s.validUtf8([235, 140, 4]))
+# print(s.validUtf8([230,136,145]))
+# print(s.validUtf8([250,145,145,145,145]))
+# print(s.validUtf8([115,100,102,231,154,132,13,10]))
