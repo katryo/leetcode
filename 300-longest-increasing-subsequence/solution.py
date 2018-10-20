@@ -1,3 +1,5 @@
+# https://leetcode.com/problems/longest-increasing-subsequence/solution/
+
 class Solution(object):
     def lengthOfLIS(self, nums):
         """
@@ -21,37 +23,27 @@ class Solution(object):
     def lengthOfLIS2(self, nums):
         if not nums:
             return 0
+        arr = [nums[0]]
 
-        stol = [nums[0]]
-        # stol[i] is the smallest tail of the length of i+1
-        # [6, 4, 7, 2, 3] then
-        # stol[0] == 6 => 4 => 2
-        # stol[1] == 7 => 3
-        # stol[1] is updated when 7 is found since stol[0] == 4 and the new num is 7.
-        # stol is a sorted array.
-
-        # Find the smallest num in stol greater than target
-        # If not found, returns len(stol) which means we append the target to stol.
+        # Returns the lowest idx of # equal to or greater than target
         def binary_search(target):
-            assert len(stol) > 0
-            lo = 0
-            hi = len(stol)
-            # We search the smallest num in stol greater than target in the range of [lo, hi)
+            lo, hi = 0, len(arr)
             while lo < hi:
                 mid = (lo + hi) // 2
-                if stol[mid] < target:
-                    lo = mid+1
-                else:
+                if arr[mid] > target:
                     hi = mid
+                else:
+                    lo = mid+1
             return lo
 
-        for num in nums:
-            idx = binary_search(num)
-            if idx == len(stol):
-                stol.append(num)
+        for i in range(1, len(nums)):
+            idx_in_arr = binary_search(nums[i])
+            # if the target is greater than the current max, append it to the arr.
+            if idx_in_arr == len(arr):
+                arr.append(nums[i])
             else:
-                stol[idx] = num
-        return len(stol)
+                arr[idx_in_arr] = nums[i]
+        return len(arr)
 
 
 if __name__ == '__main__':
