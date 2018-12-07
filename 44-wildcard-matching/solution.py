@@ -43,6 +43,7 @@ class Solution:
 if __name__ == '__main__':
     s = Solution()
     print(s.isMatch("aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba", "a*******b"))
+    print(s.isMatch("aaabbbaabaaaaababaabaaabbabbbbbbbbaabababbabbbaaaaba", "a*a"))
     print(s.isMatch("ho", 'ho**'))
     print(s.isMatch("aa", 'a'))
     print(s.isMatch("aa", '*'))
