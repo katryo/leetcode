@@ -1,3 +1,6 @@
+from math import factorial
+
+
 class Solution(object):
     def getPermutation(self, n, k):
         """
@@ -6,25 +9,37 @@ class Solution(object):
         :rtype: str
         """
 
-        nums = [num for num in range(1, n+1)]
-        factorials = [1] * n
-        for i in range(1, n):
-            factorials[i] = factorials[i-1] * i
-        factorials.reverse()
+        nums = list(range(1, n+1))
+        remain = k-1
+        perm = ''
+        digits = n
+        while digits > 0:
+            digits -= 1
+            idx, remain = divmod(remain, factorial(digits))
+            perm += str(nums[idx])
+            nums.remove(nums[idx])
+        return perm
 
-        k -= 1
-        ans = []
+    # def getPermutation(self, n, k):
+    #     """
+    #     :type n: int
+    #     :type k: int
+    #     :rtype: str
+    #     """
+    #
+    #     nums = list(range(1, n+1))
+    #     k -= 1
+    #     ans = []
+    #
+    #     for i in range(n-1, -1, -1):
+    #         idx, k = divmod(k, factorial(n))
+    #         ans.append(str(nums[idx]))
+    #         del nums[idx]
+    #     return ''.join(ans)
 
-        for i in range(n):
-            factorial = factorials[i]
-            num_idx = k // factorial
-            k -= num_idx * factorial
-            ans.append(str(nums[num_idx]))
-            del nums[num_idx]
-        return ''.join(ans)
 
-
-# s = Solution()
+s = Solution()
+print(s.getPermutation(3, 3))
 # print(s.getPermutation(4, 10))
 # print(s.getPermutation(4, 24))
 
