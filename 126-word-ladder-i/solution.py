@@ -1,6 +1,5 @@
 from collections import defaultdict
-from heapq import heappush
-from heapq import heappop
+
 
 class Solution:
     def findLadders(self, beginWord, endWord, wordList):
@@ -10,41 +9,36 @@ class Solution:
         :type wordList: List[str]
         :rtype: List[List[str]]
         """
-        wordList.append(beginWord)
-        graph = defaultdict(set)
+        wl = set(wordList)
+        layer = {}
+        layer[beginWord] = [[beginWord]]
 
-        for i in range(len(wordList)):
-            word = wordList[i]
-            for j in range(len(wordList)):
-                if i == j:
-                    continue
-                diff = 0
-                for k in range(len(word)):
-                    if word[k] != wordList[j][k]:
-                        diff += 1
-                if diff == 1:
-                    word_j = wordList[j]
-                    graph[word].add(word_j)
-                    graph[word_j].add(word)
-
-        fronteer = [(0, beginWord, [beginWord])]
-        min_path = {}
         ans = []
-        while fronteer:
-            cost, new_point, path = heappop(fronteer)
-            if endWord in min_path and min_path[endWord][0] < cost:
-                break
-            if new_point == endWord:
-                if new_point in min_path and min_path[new_point][0] < cost:
-                    continue
-                ans.append(path)
-            min_path[new_point] = cost, path
-            candidates = graph[new_point]
-            for cand in candidates:
-                if cand not in min_path or min_path[cand][1] == cost+1:
-                    heappush(fronteer, (cost+1, cand, path + [cand]))
+        alphabets = [chr(x) for x in range(ord('a'), ord('z')+1)]
 
+        def next_words(word):
+            ans = []
+            for i in range(len(word)):
+                for c in alphabets:
+                    candidate = word[:i] + c + word[i+1:]
+                    if candidate in wl:
+                        ans.append(candidate)
+            return ans
+
+        while layer:
+            n_layer = defaultdict(list)
+            for word in layer:
+                if word == endWord:
+                    ans.extend(layer[word])
+                paths = layer[word]
+                n_words = next_words(word)
+                for n_word in n_words:
+                    new_paths = [path + [n_word] for path in paths]
+                    n_layer[n_word].extend(new_paths)
+            wl -= set(n_layer.keys())
+            layer = n_layer
         return ans
+
 
 
 # s = Solution()
