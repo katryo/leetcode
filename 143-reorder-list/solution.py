@@ -48,7 +48,7 @@ class Solution(object):
         :rtype: void Do not return anything, modify head in-place instead.
         """
         if not head:
-            return None
+            return
         length = 0
         cur = head
         while cur:
