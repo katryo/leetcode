@@ -21,6 +21,7 @@ class Solution:
                     nums[i], nums[i+1] = nums[i+1], nums[i]
         return nums[-k]
 
+
 if __name__ == '__main__':
     s = Solution()
     print(s.findKthLargest2([2, 5, 2, 2, 7, 8, 9, 9], 4))
