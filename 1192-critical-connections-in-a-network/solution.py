@@ -22,14 +22,14 @@ class Solution:
                     continue
                 if child not in seen:
                     dfs(rank+1, cur_vtx, child)
-
-                lowest[cur_vtx] = min(lowest[cur_vtx], lowest[child])
-                if lowest[child] >= rank + 1:
+                if lowest[child] == rank + 1:
                     ans.append([cur_vtx, child])
+                lowest[cur_vtx] = min(lowest[cur_vtx], lowest[child])
+            return lowest
 
         dfs(0, -1, 0)
         return ans
 
 
-# s = Solution()
-# print(s.criticalConnections(4, [[0,1],[1,2],[2,0],[1,3]]))
+s = Solution()
+print(s.criticalConnections(4, [[0,1],[1,2],[2,0],[1,3]]))
